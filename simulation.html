@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator | ModuLab</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+</head>
+<body>
+    <!-- Background Blobs -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Sticky Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 12C2 12 5 4 12 4C19 4 22 12 22 12C22 12 19 20 12 20C5 20 2 12 2 12Z" stroke="#ff6b00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="12" r="3" stroke="#0f172a" stroke-width="2.5"/>
+                </svg>
+                Modu<span>Lab</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="simulation.html" class="active">Simulator</a></li>
+                <li><a href="concepts.html">Concepts</a></li>
+                <li><a href="index.html#about">About Us</a></li>
+            </ul>
+            <div class="nav-cta">
+                <a href="simulation.html" class="btn btn-primary">Reset Page</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top: 60px;">
+
+        <!-- ============================================================
+             MAIN SIMULATOR CARD — Modulation (Preserved)
+             ============================================================ -->
+        <div class="glass-card simulator-card">
+            <div class="section-header" style="margin-bottom: 40px;">
+                <div class="badge">Live Tool</div>
+                <h2>Digital Communication System Simulator</h2>
+                <p>Configure parameters and visualize the complete communication pipeline in real-time.</p>
+            </div>
+
+            <!-- Modulation Selection -->
+            <div class="mod-selection" id="modulationButtons">
+                <button class="mod-btn active" data-type="ASK">ASK</button>
+                <button class="mod-btn" data-type="FSK">FSK</button>
+                <button class="mod-btn" data-type="PSK">PSK</button>
+            </div>
+            
+            <div id="modDescription" class="glass-card" style="padding: 20px; font-size: 0.95rem; margin-bottom: 32px; background: var(--primary-soft); border-color: var(--primary);">
+                <strong>ASK Selected:</strong> The amplitude of the carrier changes depending on the bit.
+            </div>
+
+            <!-- Parameters Grid -->
+            <div class="param-grid">
+                <div class="input-group">
+                    <label for="bitStream">Binary Sequence (0/1)</label>
+                    <input type="text" id="bitStream" value="10110010" maxlength="16">
+                </div>
+                <div class="input-group">
+                    <label for="amplitude">Carrier Amplitude</label>
+                    <input type="number" id="amplitude" value="1" min="0.1" max="5" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label for="carrierFreq">Carrier Freq (Hz)</label>
+                    <input type="number" id="carrierFreq" value="5" min="1" max="20" step="1">
+                </div>
+                <div class="input-group">
+                    <label for="bitRate">Bit Duration (s)</label>
+                    <input type="number" id="bitRate" value="1" min="0.1" max="2" step="0.1">
+                </div>
+            </div>
+
+            <div class="action-btns" style="display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button id="simulateBtn" class="btn btn-primary" style="flex: 2;">Run Static Simulation</button>
+                <button id="startLiveBtn" class="btn btn-outline" style="flex: 1;">Start Live Flow</button>
+                <button id="resetBtn" class="btn btn-outline" style="flex: 1;">Clear Data</button>
+            </div>
+
+            <button class="run-pipeline-btn" onclick="runFullPipeline()">▶ Run Full Pipeline (All Stages)</button>
+
+            <!-- Live Status -->
+            <div id="liveStatus" class="live-status-card" style="display: none;">
+                <p id="statusText" style="font-weight: 700; color: var(--secondary);">Ready to simulate...</p>
+                <div id="bitIndicators" class="bit-indicators"></div>
+            </div>
+
+            <!-- Modulation Charts -->
+            <div class="chart-container" style="display: flex; flex-direction: column; gap: 12px;">
+                <div class="chart-card">
+                    <div id="bitChart" style="height: 100%;"></div>
+                </div>
+                <div class="chart-card">
+                    <div id="carrierChart" style="height: 100%;"></div>
+                </div>
+                <div class="chart-card">
+                    <div id="modulatedChart" style="height: 100%;"></div>
+                </div>
+            </div>
+
+            <div id="graphExplanation" class="glass-card" style="margin-top: 32px; padding: 20px; font-size: 0.95rem; display: none;"></div>
+        </div>
+
+
+        <!-- ============================================================
+             PIPELINE SECTION 1: LINE CODING
+             ============================================================ -->
+        <div class="pipeline-divider">▼</div>
+
+        <div class="glass-card pipeline-card pipeline-section" id="lineCodingSection">
+            <span class="stage-label">Stage 1</span>
+            <h2>Line Coding</h2>
+            <p class="section-desc">
+                Line coding converts binary data into a digital signal suitable for transmission.
+                Select a technique below to see how the bit stream is encoded into voltage levels.
+            </p>
+
+            <div class="controls-row">
+                <div class="input-group">
+                    <label for="lineType">Line Coding Technique</label>
+                    <select id="lineType">
+                        <option value="NRZ-L">NRZ-L (Non-Return-to-Zero Level)</option>
+                        <option value="NRZ-I">NRZ-I (Non-Return-to-Zero Inverted)</option>
+                        <option value="Manchester">Manchester</option>
+                        <option value="DiffManchester">Differential Manchester</option>
+                        <option value="AMI">AMI (Alternate Mark Inversion)</option>
+                    </select>
+                </div>
+                <button class="btn btn-secondary" onclick="runLineCoding()">Simulate Line Coding</button>
+            </div>
+
+            <div class="chart-label">Input Digital Signal</div>
+            <div id="lineInputChart" class="chart-container-pipeline"></div>
+
+            <div class="chart-label">Line Coded Signal</div>
+            <div id="lineChart" class="chart-container-pipeline"></div>
+        </div>
+
+
+        <!-- ============================================================
+             PIPELINE SECTION 2: CHANNEL NOISE
+             ============================================================ -->
+        <div class="pipeline-divider">▼</div>
+
+        <div class="glass-card pipeline-card pipeline-section" id="noiseSection">
+            <span class="stage-label">Stage 2</span>
+            <h2>Channel Noise</h2>
+            <p class="section-desc">
+                During transmission, the signal is corrupted by noise in the communication channel.
+                Adjust the noise level to see how it distorts the modulated signal.
+            </p>
+
+            <div class="slider-row">
+                <label for="noiseLevel">Noise Level (σ):</label>
+                <input type="range" id="noiseLevel" min="0" max="1" step="0.05" value="0.3">
+                <span class="slider-value" id="noiseLevelValue">0.3</span>
+            </div>
+
+            <button class="btn btn-secondary" onclick="applyNoise()">Apply Noise</button>
+
+            <div class="chart-label">Original Modulated Signal</div>
+            <div id="noiseOriginalChart" class="chart-container-pipeline"></div>
+
+            <div class="chart-label">Signal After Noise (Received)</div>
+            <div id="noiseChart" class="chart-container-pipeline"></div>
+        </div>
+
+
+        <!-- ============================================================
+             PIPELINE SECTION 3: ERROR DETECTION
+             ============================================================ -->
+        <div class="pipeline-divider">▼</div>
+
+        <div class="glass-card pipeline-card pipeline-section" id="errorSection">
+            <span class="stage-label">Stage 3</span>
+            <h2>Error Detection & Correction</h2>
+            <p class="section-desc">
+                Error detection techniques add redundancy to detect (and sometimes correct) errors
+                introduced during transmission.
+            </p>
+
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="errorMethod" value="parity-even" checked> Even Parity
+                </label>
+                <label>
+                    <input type="radio" name="errorMethod" value="parity-odd"> Odd Parity
+                </label>
+                <label>
+                    <input type="radio" name="errorMethod" value="crc"> CRC (x³+x+1)
+                </label>
+                <label>
+                    <input type="radio" name="errorMethod" value="hamming"> Hamming (7,4)
+                </label>
+            </div>
+
+            <div class="controls-row">
+                <div class="input-group">
+                    <label for="errorBitPos">Simulate Error at Bit Position (0-indexed, -1 for none)</label>
+                    <input type="number" id="errorBitPos" value="-1" min="-1" step="1">
+                </div>
+                <button class="btn btn-secondary" onclick="runErrorDetection()">Run Error Detection</button>
+            </div>
+
+            <div id="errorResult" class="result-box" style="display:none;"></div>
+        </div>
+
+
+        <!-- ============================================================
+             PIPELINE SECTION 4: MULTIPLEXING
+             ============================================================ -->
+        <div class="pipeline-divider">▼</div>
+
+        <div class="glass-card pipeline-card pipeline-section" id="muxSection">
+            <span class="stage-label">Stage 4</span>
+            <h2>Multiplexing</h2>
+            <p class="section-desc">
+                Multiplexing combines multiple signals into a single composite signal for
+                efficient use of the communication channel.
+            </p>
+
+            <div class="signal-inputs">
+                <div class="input-group">
+                    <label for="muxSignal1">Signal 1 (from pipeline)</label>
+                    <input type="text" id="muxSignal1" value="10110010" readonly
+                           style="opacity: 0.7; cursor: not-allowed;">
+                </div>
+                <div class="input-group">
+                    <label for="muxSignal2">Signal 2</label>
+                    <input type="text" id="muxSignal2" value="11001100" placeholder="e.g. 11001100">
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <div class="input-group">
+                    <label for="muxType">Technique</label>
+                    <select id="muxType">
+                        <option value="TDM">TDM (Time Division Multiplexing)</option>
+                        <option value="FDM">FDM (Frequency Division Multiplexing)</option>
+                    </select>
+                </div>
+                <button class="btn btn-secondary" onclick="runMultiplexing()">Simulate Multiplexing</button>
+            </div>
+
+            <div class="chart-label">Signal 1</div>
+            <div id="muxChart1" class="chart-container-pipeline"></div>
+
+            <div class="chart-label">Signal 2</div>
+            <div id="muxChart2" class="chart-container-pipeline"></div>
+
+            <div class="chart-label" id="muxOutputLabel">Multiplexed Output</div>
+            <div id="muxChart" class="chart-container-pipeline"></div>
+        </div>
+
+
+        <!-- Comparison Table -->
+        <div class="glass-card comparison-card">
+            <div class="section-header" style="margin-bottom: 32px; text-align: left;">
+                <h2>Technique Comparison</h2>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Technique</th>
+                        <th>Parameter Changed</th>
+                        <th>Noise Immunity</th>
+                        <th>Bandwidth</th>
+                        <th>Complexity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ASK</td>
+                        <td>Amplitude</td>
+                        <td>Low</td>
+                        <td>Low</td>
+                        <td>Low</td>
+                    </tr>
+                    <tr>
+                        <td>FSK</td>
+                        <td>Frequency</td>
+                        <td>Moderate</td>
+                        <td>High</td>
+                        <td>Moderate</td>
+                    </tr>
+                    <tr>
+                        <td>PSK</td>
+                        <td>Phase</td>
+                        <td><span class="best-badge">Most Reliable</span></td>
+                        <td>Moderate</td>
+                        <td>High</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="sim-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                ModuLab Visualization System | Designed by Vraj & Veer
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
