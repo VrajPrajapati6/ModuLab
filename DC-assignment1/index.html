@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModuLab | Visualize Digital Modulation Effortlessly</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Blobs -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Sticky Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 12C2 12 5 4 12 4C19 4 22 12 22 12C22 12 19 20 12 20C5 20 2 12 2 12Z" stroke="#ff6b00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="12" r="3" stroke="#0f172a" stroke-width="2.5"/>
+                </svg>
+                Modu<span>Lab</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="simulation.html">Simulator</a></li>
+                <li><a href="concepts.html">Concepts</a></li>
+                <li><a href="#about">About Us</a></li>
+            </ul>
+            <div class="nav-cta">
+                <a href="simulation.html" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="badge">Digital Communication Tool</div>
+                    <h1>Visualize Digital <span>Modulation</span> Effortlessly</h1>
+                    <p>Understand ASK, FSK, and PSK with interactive simulation and real-time visualization. Perfect for learning and teaching signal processing.</p>
+                    <div class="hero-btns">
+                        <a href="simulation.html" class="btn btn-primary">Get Started &rarr;</a>
+                        <a href="#concepts" class="btn btn-outline">Learn Concepts</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <!-- Placeholder or SVG for Signal Animation -->
+                    <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
+                        <path d="M10 150 Q 50 50, 90 150 T 170 150 T 250 150 T 330 150" stroke="#ff6b00" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.8">
+                            <animate attributeName="d" dur="3s" repeatCount="indefinite" values="M10 150 Q 50 50, 90 150 T 170 150 T 250 150 T 330 150; M10 150 Q 50 250, 90 150 T 170 150 T 250 150 T 330 150; M10 150 Q 50 50, 90 150 T 170 150 T 250 150 T 330 150" />
+                        </path>
+                        <rect x="50" y="80" width="300" height="140" rx="20" fill="white" fill-opacity="0.1" stroke="#ff6b00" stroke-dasharray="8 8" />
+                        <text x="50%" y="260" text-anchor="middle" fill="#0f172a" font-weight="800" font-family="Inter">Real-time Signal Analysis</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Concepts Section -->
+    <section id="concepts" class="concepts">
+        <div class="container">
+            <div class="section-header">
+                <div class="badge">Education</div>
+                <h2>Core Modulation Types</h2>
+            </div>
+            <div class="concepts-grid">
+                <div class="glass-card concept-card">
+                    <div class="icon-box">A</div>
+                    <h3>ASK</h3>
+                    <p><strong>Amplitude Shift Keying</strong>: The amplitude of the carrier wave is varied to represent binary data. High amplitude for 1, low/zero for 0.</p>
+                </div>
+                <div class="glass-card concept-card">
+                    <div class="icon-box">F</div>
+                    <h3>FSK</h3>
+                    <p><strong>Frequency Shift Keying</strong>: The frequency of the carrier is shifted between two values to represent 0s and 1s. Reliable for noisy channels.</p>
+                </div>
+                <div class="glass-card concept-card">
+                    <div class="icon-box">P</div>
+                    <h3>PSK</h3>
+                    <p><strong>Phase Shift Keying</strong>: The phase of the carrier wave is shifted (usually 180&deg;) to represent data changes. Most efficient & reliable.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="glass-card">
+                <div class="section-header">
+                    <div class="badge">Capabilities</div>
+                    <h2>Why use ModuLab?</h2>
+                </div>
+                <div class="concepts-grid">
+                    <div class="feature-item">
+                        <h4>Real-time Simulation</h4>
+                        <p>Watch signals evolve live as bits are transmitted through the virtual channel.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Graph Visualization</h4>
+                        <p>Detailed Plotly.js graphs for input, carrier, and modulated signals.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Interactive Learning</h4>
+                        <p>Change parameters like frequency and amplitude on the fly to see instant results.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="tech">
+        <div class="container">
+            <div class="section-header">
+                <h2>Powered By</h2>
+            </div>
+            <div class="tech-container">
+                <div class="tech-item"><circle></circle> HTML5</div>
+                <div class="tech-item"><circle></circle> CSS3</div>
+                <div class="tech-item"><circle></circle> JavaScript</div>
+                <div class="tech-item"><circle></circle> Plotly.js</div>
+                <div class="tech-item"><circle></circle> Responsive UI</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <div class="badge">Team</div>
+                <h2>About the Project</h2>
+                <p style="max-width: 600px; margin: 20px auto;">Designed as part of the Data Communication assignment to simplify complex modulation concepts through interactive tools.</p>
+            </div>
+            <div class="team-grid">
+                <div class="glass-card member-card">
+                    <div class="member-info">
+                        <h3>Vraj Prajapati</h3>
+                        <span class="role">Project Developer</span>
+                    </div>
+                    <div class="member-stats">
+                        <div class="stat"><span>Roll Number</span> <span>24BCE206</span></div>
+                        <div class="stat"><span>Division</span> <span>C</span></div>
+                        <div class="stat"><span>Batch</span> <span>C-3</span></div>
+                    </div>
+                </div>
+                <div class="glass-card member-card">
+                    <div class="member-info">
+                        <h3>Veer Tejani</h3>
+                        <span class="role">Project Developer</span>
+                    </div>
+                    <div class="member-stats">
+                        <div class="stat"><span>Roll Number</span> <span>24BCE200</span></div>
+                        <div class="stat"><span>Division</span> <span>C</span></div>
+                        <div class="stat"><span>Batch</span> <span>C-3</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <h2>ModuLab</h2>
+            <p>Interactive Digital to Analog Conversion Visualization.</p>
+            <div class="footer-bottom">
+                Made for Data Communication Assignment &copy; 2026 | Vraj Prajapati & Veer Tejani
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
