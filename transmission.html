@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transmission Visualizer | DataComm</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <nav class="glass">
+        <div class="logo">DC.lab</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="simulation.html">Simulation</a>
+            <a href="transmission.html">Transmission</a>
+            <a href="concepts.html">Concepts</a>
+            <a href="about.html">About</a>
+            <button class="theme-toggle" id="theme-btn">🌙</button>
+        </div>
+    </nav>
+
+    <div class="sim-container" style="padding-top: 120px; display: block;">
+        <header class="hero-content" style="margin: 0 auto 50px; text-align: center;">
+            <span class="badge">End-to-End Pipeline</span>
+            <h1>Data Transmission Journey</h1>
+            <p>Visualize exactly how "I am Vraj" travels from one device to another through the OSI layers.</p>
+        </header>
+
+        <!-- Input Section -->
+        <div class="glass animate" style="padding: 30px; max-width: 960px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: 1fr 150px 300px; gap: 25px; align-items: flex-end;">
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Enter Message to Send</label>
+                    <input type="text" id="trans-input" value="I am Vraj" placeholder="Type your message...">
+                </div>
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Modulation</label>
+                    <select id="trans-mod">
+                        <option value="ask">ASK</option>
+                        <option value="fsk">FSK</option>
+                        <option value="psk">PSK</option>
+                    </select>
+                </div>
+                <div class="input-group" style="margin-bottom: 0; min-width: 280px;">
+                    <label>Noise Level: <span id="trans-noise-val">0%</span></label>
+                    <input type="range" id="trans-noise" min="0" max="100" value="0" style="width: 100%;">
+                </div>
+            </div>
+        </div>
+
+        <div class="transmission-flow">
+            <!-- Step 1: Input -->
+            <div class="flow-step animate" style="animation-delay: 0.1s">
+                <div class="glass" style="padding: 20px;">
+                    <h4 style="color:var(--primary); font-size: 0.8rem; text-transform: uppercase;">1. Application Layer (Input)</h4>
+                    <p id="step-input" style="font-size: 1.2rem; margin-top: 10px; font-weight: bold;">I am Vraj</p>
+                </div>
+            </div>
+
+            <div class="connector"></div>
+
+            <!-- Step 2: Encoding -->
+            <div class="flow-step animate" style="animation-delay: 0.2s">
+                <div class="glass" style="padding: 20px;">
+                    <h4 style="color:var(--primary); font-size: 0.8rem; text-transform: uppercase;">2. Encoding (ASCII Binary)</h4>
+                    <div id="step-encoding" class="bit-stream-display" style="margin-top: 10px; font-size: 0.9rem;">...</div>
+                </div>
+            </div>
+
+            <div class="connector"></div>
+
+            <!-- Step 3: Framing -->
+            <div class="flow-step animate" style="animation-delay: 0.3s">
+                <div class="glass" style="padding: 20px;">
+                    <h4 style="color:var(--primary); font-size: 0.8rem; text-transform: uppercase;">3. Framing (Data Packaging)</h4>
+                    <div id="step-framing" class="bit-stream-display" style="margin-top: 10px; font-size: 0.85rem;">...</div>
+                </div>
+            </div>
+
+            <div class="connector"></div>
+
+            <!-- Step 4: Modulation -->
+            <div class="flow-step animate" style="animation-delay: 0.4s">
+                <div class="glass" style="padding: 20px;">
+                    <h4 style="color:var(--primary); font-size: 0.8rem; text-transform: uppercase;">4. Modulation (Signal Generation)</h4>
+                    <p id="step-modulation" style="margin-top: 10px; font-weight: 500;">Converting bits to analog wave parameters...</p>
+                    <canvas id="mod-canvas" style="height: 120px; width: 100%; margin-top: 15px;"></canvas>
+                </div>
+            </div>
+
+            <div class="connector" style="height: 60px; border-left: 2px dashed var(--accent); background: none;"></div>
+
+            <!-- Step 5: Channel -->
+            <div class="flow-step animate" style="animation-delay: 0.5s">
+                <div class="glass" style="padding: 30px; border: 2px solid var(--accent); background: rgba(var(--accent-h), var(--accent-s), var(--accent-l), 0.05);">
+                    <h3 style="text-align: center; color: var(--accent);">🌐 TRANSMISSION CHANNEL (Physical Layer)</h3>
+                    <p style="text-align: center; font-size: 0.8rem; color: var(--text-muted);">Signal traveling through air/cable where noise gets added.</p>
+                    <div id="step-channel" class="bit-stream-display" style="margin-top: 20px; text-align: center; background: rgba(0,0,0,0.1); padding: 15px; border-radius: 12px;">...</div>
+                </div>
+            </div>
+
+            <div class="connector" style="height: 60px; border-left: 2px dashed var(--accent); background: none;"></div>
+
+            <!-- Step 6: Demodulation -->
+            <div class="flow-step animate" style="animation-delay: 0.6s">
+                <div class="glass" style="padding: 20px;">
+                    <h4 style="color:var(--primary); font-size: 0.8rem; text-transform: uppercase;">6. Demodulation (Signal → Bits)</h4>
+                    <div id="step-demodulation" class="bit-stream-display" style="margin-top: 10px; font-size: 0.9rem;">...</div>
+                    <canvas id="demod-canvas" style="height: 120px; width: 100%; margin-top: 15px;"></canvas>
+                </div>
+            </div>
+
+            <div class="connector"></div>
+
+            <!-- Step 7: Decoding -->
+            <div class="flow-step animate" style="animation-delay: 0.7s">
+                <div class="glass" style="padding: 20px;">
+                    <h4 style="color:var(--primary); font-size: 0.8rem; text-transform: uppercase;">7. Decoding & Deframing</h4>
+                    <div id="step-decoding" class="bit-stream-display" style="margin-top: 10px; font-size: 0.9rem;">...</div>
+                </div>
+            </div>
+
+            <div class="connector"></div>
+
+            <!-- Step 8: Output -->
+            <div class="flow-step animate" style="animation-delay: 0.8s">
+                <div class="glass" style="padding: 30px; border: 2px solid var(--primary);">
+                    <h4 style="color:var(--primary); font-size: 0.8rem; text-transform: uppercase;">8. Final Output (Received Message)</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <p id="step-output" style="font-size: 1.8rem; font-weight: 800;">...</p>
+                        <div id="integrity-badge"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Data Communication Assignment - Vraj & Veer
+    </footer>
+
+    <script src="transmission.js"></script>
+    <script src="particles.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concepts | DataComm</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <nav class="glass">
+        <div class="logo">DC.lab</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="simulation.html">Simulation</a>
+            <a href="transmission.html">Transmission</a>
+            <a href="concepts.html">Concepts</a>
+            <a href="about.html">About</a>
+            <button class="theme-toggle" id="theme-btn">🌙</button>
+        </div>
+    </nav>
+
+    <div class="info-container">
+        <h1 class="animate" style="text-align: center; margin-bottom: 50px;">Core Concepts</h1>
+        
+        <div class="info-card glass animate">
+            <span class="badge">Digital to Analog</span>
+            <h2>ASK (Amplitude Shift Keying)</h2>
+            <p>Amplitude Shift Keying (ASK) is a form of modulation that represents digital data as variations in the amplitude of a carrier wave. In its simplest form, Binary ASK (on-off keying), the carrier is either present (representing '1') or absent (representing '0').</p>
+            <p><strong>Constellation:</strong> Points lie on the real axis (I), with '0' at the origin and '1' at a distance proportional to peak amplitude.</p>
+        </div>
+
+        <div class="info-card glass animate" style="animation-delay: 0.2s">
+            <span class="badge">Digital to Analog</span>
+            <h2>FSK (Frequency Shift Keying)</h2>
+            <p>Frequency Shift Keying (FSK) conveys information by changing the frequency of the carrier. Each bit ('0' or '1') is assigned a specific frequency. This method is highly robust against noise compared to ASK.</p>
+        </div>
+
+        <div class="info-card glass animate" style="animation-delay: 0.4s">
+            <span class="badge">Digital to Analog</span>
+            <h2>PSK (Phase Shift Keying)</h2>
+            <p>Phase Shift Keying (PSK) conveys information by changing the phase of the carrier wave. In BPSK (Binary PSK), the phase is shifted by 180 degrees to switch between '0' and '1'. This is highly efficient and less susceptible to noise than ASK.</p>
+            <p><strong>Constellation:</strong> Points lie on a circle centered at the origin, with '0' at 0° and '1' at 180°.</p>
+        </div>
+
+        <div class="info-card glass animate" style="animation-delay: 0.6s">
+            <span class="badge">Analog to Digital</span>
+            <h2>PCM (Pulse Code Modulation)</h2>
+            <p>Pulse Code Modulation (PCM) is the method used to digitally represent sampled analog signals. It consists of three main steps:</p>
+            <ul>
+                <li><strong>Sampling:</strong> Measuring the analog signal at regular intervals.</li>
+                <li><strong>Quantization:</strong> Rounding the sampled values to the nearest level in a set of discrete values.</li>
+                <li><strong>Encoding:</strong> Converting the quantized levels into binary code (bits).</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Data Communication Assignment - Vraj & Veer
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="particles.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation | DataComm</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <nav class="glass">
+        <div class="logo">DC.lab</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="simulation.html">Simulation</a>
+            <a href="transmission.html">Transmission</a>
+            <a href="concepts.html">Concepts</a>
+            <a href="about.html">About</a>
+            <button class="theme-toggle" id="theme-btn">🌙</button>
+        </div>
+    </nav>
+
+    <div class="sim-container">
+        <!-- Controls Sidebar -->
+        <aside class="controls-panel glass animate">
+            <h2>Simulator Controls</h2>
+            <br>
+            
+            <div class="input-group">
+                <label>Input Text (Auto-bit)</label>
+                <input type="text" id="text-input" placeholder="Type here...">
+            </div>
+
+            <div class="input-group">
+                <label>Manual Bit Stream</label>
+                <input type="text" id="bit-input" placeholder="0 or 1">
+            </div>
+
+            <div class="input-group">
+                <label>Modulation Technique</label>
+                <select id="mod-type">
+                    <option value="ask">ASK (Amplitude Shift Keying)</option>
+                    <option value="fsk">FSK (Frequency Shift Keying)</option>
+                    <option value="psk">PSK (Phase Shift Keying)</option>
+                </select>
+            </div>
+
+            <div class="input-group" id="scheme-group">
+                <label>Modulation Scheme</label>
+                <select id="mod-scheme">
+                    <option value="bpsk">BPSK (Binary Phase Shift Keying)</option>
+                    <option value="qpsk">QPSK (Quadrature Phase Shift Keying)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Noise Level (SNR)</label>
+                <input type="range" id="noise-slider" min="0" max="100" value="0">
+                <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.8rem;">
+                    <span>Clean</span>
+                    <span id="noise-val">0%</span>
+                    <span>Noisy</span>
+                </div>
+            </div>
+
+            <hr style="border: 0.5px solid var(--border); margin: 20px 0;">
+
+            <div class="input-group" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <input type="checkbox" id="voice-overlay" style="width: 20px; height: 20px;">
+                <label for="voice-overlay" style="margin-bottom: 0;">Enable Voice Overlay</label>
+            </div>
+
+            <hr style="border: 0.5px solid var(--border); margin: 20px 0;">
+
+            <div class="input-group">
+                <label>Feature Switch</label>
+                <button class="btn-primary" style="width: 100%;" id="toggle-pcm">Switch to PCM (A2D)</button>
+            </div>
+        </aside>
+
+        <!-- Visualization Main -->
+        <main class="viz-panel animate" style="animation-delay: 0.2s">
+            <div class="chart-box glass" id="d2a-section">
+                <h3>Digital to Analog (Modulated Signal)</h3>
+                <div class="canvas-wrapper">
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Source Binary Signal</p>
+                    <canvas id="binary-canvas"></canvas>
+                    
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 20px;">Modulated Carrier Wave (with Noise)</p>
+                    <canvas id="modulated-canvas"></canvas>
+                </div>
+
+                <div style="display: flex; gap: 30px; margin-top: 30px; flex-wrap: wrap;">
+                    <div class="constellation-box glass" style="padding: 20px; flex: 1; min-width: 300px; display: flex; flex-direction: column;">
+                        <h3>Constellation Diagram</h3>
+                        <div style="flex: 1; min-height: 300px; position: relative;">
+                            <canvas id="constellation-chart"></canvas>
+                            <div id="constellation-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(var(--card-bg-rgb), 0.8); display: none; align-items: center; justify-content: center; text-align: center; font-weight: bold; border-radius: 12px; z-index: 10;">
+                                <span>Constellation Not Applicable<br>for FSK Modulation</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-box glass" style="padding: 20px; flex: 1; min-width: 300px;">
+                        <h3>Signal Stats</h3>
+                        <br>
+                        <p id="stats-text">Bit Rate: 1 bps <br> Baud Rate: 1 baud <br> Status: Sync Locked</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PCM Section (Hidden by default) -->
+            <div class="chart-box glass" id="pcm-section" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Analog to Digital (PCM Pipeline)</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <span class="badge" style="background:rgba(var(--primary-h), var(--primary-s), var(--primary-l), 0.1)">1. Sampling</span>
+                        <span class="badge" style="background:rgba(var(--primary-h), var(--primary-s), var(--primary-l), 0.1)">2. Quantization</span>
+                        <span class="badge" style="background:rgba(var(--primary-h), var(--primary-s), var(--primary-l), 0.1)">3. Encoding</span>
+                    </div>
+                </div>
+                
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">Converting the modulated analog signal into a discrete digital sequence.</p>
+                
+                <div class="canvas-wrapper" style="position: relative;">
+                    <canvas id="pcm-canvas" style="height: 500px;"></canvas>
+                    <div id="pcm-legend" style="position: absolute; top: 10px; right: 10px; font-size: 0.7rem; background: var(--card-bg); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+                        <div style="display: flex; align-items: center; gap: 5px;"><div style="width:10px; height:2px; background:#94a3b8; border-radius:1px;"></div> Modulated Carrier</div>
+                        <div style="display: flex; align-items: center; gap: 5px; margin-top: 5px;"><div style="width:10px; height:10px; background:var(--primary); border-radius:50%;"></div> Sampled & Quantized</div>
+                    </div>
+                </div>
+
+                <div class="pcm-results-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px;">
+                    <div class="glass" style="padding: 15px;">
+                        <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--primary);">Sampling Output</h4>
+                        <p id="sampling-data" style="font-size: 0.75rem; margin-top: 5px; font-family: monospace; color: var(--text-muted);">Points: [V1, V2, ...]</p>
+                    </div>
+                    <div class="glass" style="padding: 15px;">
+                        <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--primary);">Quantization Levels</h4>
+                        <p id="quant-data" style="font-size: 0.75rem; margin-top: 5px; font-family: monospace; color: var(--text-muted);">Levels: [L3, L7, ...]</p>
+                    </div>
+                    <div class="glass" style="padding: 15px;">
+                        <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--primary);">Binary Encoding</h4>
+                        <p id="encoding-data" style="font-size: 0.75rem; margin-top: 5px; font-family: monospace; color: var(--text-muted);">Bits: [0101, 1111, ...]</p>
+                    </div>
+                </div>
+
+                <div id="pcm-final-status" class="glass" style="margin-top: 20px; padding: 20px; text-align: center; border: 2px solid var(--primary-glow);">
+                    <h3 id="final-bit-recovered" style="color: var(--primary);">Final Bit Sequence: 101100...</h3>
+                    <p id="integrity-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">Awaiting Process...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        &copy; 2026 Data Communication Assignment - Vraj & Veer
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="particles.js"></script>
+</body>
+</html>
