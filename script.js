@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const constellationOverlay = document.getElementById('constellation-overlay');
     
     const pcmSection = document.getElementById('pcm-section');
+    const d2aSection = document.getElementById('d2a-section');
     const statsText = document.getElementById('stats-text');
 
     const binaryCanvas = document.getElementById('binary-canvas');
